@@ -1,8 +1,8 @@
 var travel = require('utils.travel');
 
 var roleUpgrader = {
-    max: 1,
-    body: [WORK,MOVE,CARRY],
+    max: 2,
+    body: [WORK,WORK,MOVE,MOVE,CARRY,CARRY],
     tempAs: null,
 
     hasWork: function (creep) { return true; },
@@ -28,7 +28,10 @@ var roleUpgrader = {
             }
         }
         else {
-	        var source = travel.closestSource(creep)
+            var sources = creep.room.find(FIND_SOURCES);
+	        var source = sources[0];
+//            var source = sources[which % sources.length];
+//	        var source = travel.closestSource(creep)
             if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(source);
             }

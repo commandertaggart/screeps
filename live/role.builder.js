@@ -2,7 +2,7 @@ var travel = require('utils.travel');
 
 var roleBuilder = {
     max: 2,
-    body: [WORK,MOVE,CARRY],
+    body: [WORK,WORK,MOVE,MOVE,CARRY,CARRY],
     tempAs: 'harvester',
 
     hasWork: function builder_hasWork(creep) {
@@ -36,6 +36,7 @@ var roleBuilder = {
 	    else {
 			var sources = creep.room.find(FIND_SOURCES);
 	        var source = sources[1];
+//            var source = sources[which % sources.length];
 //	        var source = travel.closestSource(creep)
             if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(source);
