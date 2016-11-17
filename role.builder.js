@@ -34,7 +34,9 @@ var roleBuilder = {
             }
 	    }
 	    else {
-	        var source = travel.closestSource(creep)
+			var sources = creep.room.find(FIND_SOURCES);
+	        var source = sources[1];
+//	        var source = travel.closestSource(creep)
             if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(source);
             }
