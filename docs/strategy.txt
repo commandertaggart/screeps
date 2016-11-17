@@ -1,0 +1,29 @@
+
+Workers
+
+Worker creeps are involved in shuttling energy from one place to another. this
+breaks down their task into two arms: collect and deliver.  Each arm may be
+subdivided if some traffic control is needed.
+
+Part 1: Analysis
+The desired task is analyzed using these steps:
+- Determine if work is needed.  If not, pick another job and start over.
+- Determine the location of the work.  Pick a construction site, energy store,
+etc., and the energy source closest to it.  Also determine if there are staging
+areas for the source or destination.
+- Initiate a work cycle.
+
+Part 2: Work Cycle
+Complete one cycle of work:
+- If there is a staging area for the source, travel there and wait your turn.
+- Travel to the source and collect energy.
+- If there is a staging area for the destination, travel there and wait your turn.
+- Travel to the destination and deliver.
+- Start again with analysis.
+
+State Machine
+
+This process is driven by a state machine, giving each creep one thing to do
+at a time, with any subsequently needed information stored in memory.
+
+Each state is represented by a task function.
