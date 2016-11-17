@@ -1,6 +1,6 @@
 roleHarvester = {
     max: 2,
-    body: [WORK,MOVE,MOVE,CARRY],
+    body: [WORK,MOVE,CARRY],
     tempAs: 'upgrader',
 
     hasWork: function harvester_hasWork(creep)

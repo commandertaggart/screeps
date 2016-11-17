@@ -2,7 +2,7 @@ var travel = require('utils.travel');
 
 var roleUpgrader = {
     max: 1,
-    body: [WORK,MOVE,MOVE,CARRY],
+    body: [WORK,MOVE,CARRY],
     tempAs: null,
 
     hasWork: function (creep) { return true; },

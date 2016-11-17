@@ -2,7 +2,7 @@ var travel = require('utils.travel');
 
 var roleBuilder = {
     max: 2,
-    body: [WORK,MOVE,MOVE,MOVE,CARRY,CARRY],
+    body: [WORK,MOVE,CARRY],
     tempAs: 'harvester',
 
     hasWork: function builder_hasWork(creep) {
