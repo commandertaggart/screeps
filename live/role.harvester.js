@@ -1,6 +1,6 @@
 roleHarvester = {
-    max: 2,
-    body: [WORK,WORK,MOVE,MOVE,CARRY,CARRY],
+    max: 3,
+    body: [WORK,MOVE,MOVE,CARRY,CARRY],
     tempAs: 'upgrader',
 
     hasWork: function harvester_hasWork(creep)
@@ -36,8 +36,11 @@ roleHarvester = {
                     }
             });
             if(targets.length > 0) {
-                if(creep.transfer(targets[which % targets.length], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(targets[which % targets.length]);
+                targets.sort((a,b) => creep.pos.getRangeTo(a) - creep.pos.getRangeTo(b));
+                var target = targets[0];
+                //var target = targets[which % targets.length];
+                if(creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(target);
                 }
             }
         }

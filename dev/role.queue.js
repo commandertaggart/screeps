@@ -6,9 +6,13 @@ the structure to determine how many creeps are able to access it at one
 time, then only allow that many creeps to approach of those that are rallied
 at this flag. */
 
+var manager = {
+	task: require('manager.task')
+};
+
 var task = {
-	gather: require('task.gather');
-}
+	gather: require('task.gather')
+};
 
 module.exports = {
 	init: function role_queue_init(flag)
@@ -21,7 +25,7 @@ module.exports = {
 			var q = flag.memory.queue = {
 				target: { x: match[1], y: match[2] },
 				slots: 0,
-				range: 3,
+				range: 2,
 				waiting: [],
 				test: {
 					top: match[2] - 2,
@@ -61,9 +65,13 @@ module.exports = {
 			var allow = q.slots - creeps.length;
 			while (allow > 0 && q.waiting.length > 0)
 			{
-				var nextCreep = q.waiting.shift();
-				task.gather.init(nextCreep, q.target);
-				--allow;
+				var nextCreep = Game.getObjectById(q.waiting.shift());
+				if (nextCreep)
+				{
+					manager.task.free(nextCreep);
+					task.gather.init(nextCreep, q.target);
+					--allow;
+				}
 			}
 		}
 		else
