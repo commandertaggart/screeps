@@ -14,7 +14,7 @@ module.exports = {
 			var room = Game.rooms[r];
 			if (room && room.controller && room.controller.my)
 			{
-				var p = room.memory.population = room.memory.population || {};
+				var p = room.memory.population = room.memory.population || { cooldown: 0 };
 
 				if (p.cooldown > 0)
 				{ --p.cooldown }
@@ -22,8 +22,8 @@ module.exports = {
 					if (oneRoom)
 					{ p.cooldown = 0; }
 					else {
-						module.exports.per(room);
 						p.cooldown = module.exports.frequency;
+						module.exports.per(room);
 						oneRoom = true;
 					}
 				}
@@ -31,7 +31,8 @@ module.exports = {
 		}
 	},
 	per: function manager_population_per(room)
-	{
+	{ console.log("population analysis for room " + room.name);
+		var cpu = Game.getUsed();
 		var classes = {
 			worker: require('./class.worker')
 		}
@@ -66,7 +67,7 @@ module.exports = {
 					++analysis.tasks[creep.memory.task];
 				}
 				else {
-					++analysis.task.idle;
+					++analysis.tasks.idle;
 				}
 
 				if (creep.memory.class)
@@ -141,24 +142,33 @@ module.exports = {
 		while (analysis.classes.worker < config.minWorkers)
 		{
 			console.log("queueing spawn for emergency worker");
-			spawnQueue.push(classes.worker.spawnData(sp, 'emergency'));
+			spawnQueue.push(classes.worker.spawnData(null, 'emergency'));
 		}
 
 		if (spawnQueue.length == 0) // nothing else going on, see if we want to add one
 		{
 			var cap = analysis.gatherSlots * config.gatherScale;
-			if (analysis.classes.worker == cap - 1)
+			spawners.forEach(function (sp)
 			{
-				console.log("queueing spawn for new worker");
-				spawnQueue.push(classes.worker.spawnData(sp, 'maintain'));
-			}
-			else if (analysis.classes.worker < cap)
-			{
-				console.log("queueing spawn for next worker");
-				spawnQueue.push(classes.worker.spawnData(sp, 'build'));
-			}
+    			if (analysis.classes.worker == cap - 1)
+    			{
+    				console.log(sp.name + ": queueing spawn for new worker.");
+    				spawnQueue.push(classes.worker.spawnData(sp, 'maintain'));
+    				++analysis.classes.worker;
+    			}
+    			else if (analysis.classes.worker < cap)
+    			{
+    				console.log(sp.name + ": queueing spawn for next worker.");
+    				spawnQueue.push(classes.worker.spawnData(sp, 'build'));
+    				++analysis.classes.worker;
+    			}
+				else {
+					console.log(sp.name + ": population full, leaving spawner idle.");
+				}
+			});
 		}
 
+		console.log("spawn queue has " + spawnQueue.length + " entries.");
 		spawners.forEach(function (sp) {
 			if (!sp.spawning && spawnQueue.length > 0)
 			{
@@ -172,6 +182,8 @@ module.exports = {
 				}
 			}
 		});
+
+		console.log("population analysis done. Cost: " + Game.getUsed() - cpu);
 	},
 	bodyCost: function manager_population_bodyCost(body)
 	{
