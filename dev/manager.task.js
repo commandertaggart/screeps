@@ -11,17 +11,13 @@ module.exports = {
 
 	run: function manager_task_run()
 	{
-		var classes = {
-			worker: require('./class.worker')
-		}
-
 		for (var c in Game.creeps)
 		{
 			var creep = Game.creeps[c];
 
-			if (creep.memory.class in classes)
+			if (creep.memory.role in role)
 			{
-				classes[creep.memory.class].run(creep);
+				role[creep.memory.role].run(creep);
 			}
 		}
 	}

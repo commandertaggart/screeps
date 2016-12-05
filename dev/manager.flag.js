@@ -2,10 +2,6 @@
 module.exports = {
 	run: function manager_flag_run()
 	{
-		var role = {
-			queue: require('./role.queue')
-		};
-		
 		// check flags for task assignment
 		var flags = Game.flags;
 

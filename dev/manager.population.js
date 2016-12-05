@@ -33,9 +33,6 @@ module.exports = {
 	per: function manager_population_per(room)
 	{ console.log("population analysis for room " + room.name);
 		var cpu = Game.getUsedCpu();
-		var classes = {
-			worker: require('./class.worker')
-		}
 
 		// analyze population and determine needs
 		var analysis = {
@@ -44,7 +41,7 @@ module.exports = {
 			tasks: {
 				idle: 0
 			},
-			classes: {
+			roles: {
 				worker: 0
 			},
 			energyPct: -1,
@@ -70,10 +67,10 @@ module.exports = {
 					++analysis.tasks.idle;
 				}
 
-				if (creep.memory.class)
+				if (creep.memory.role)
 				{
-					var c = creep.memory.class;
-					++analysis.classes[c];
+					var c = creep.memory.role;
+					++analysis.roles[c];
 				}
 				else {
 					// ignore this one, it's a one-off
@@ -135,14 +132,14 @@ module.exports = {
 		var spawnQueue = room.memory.spawnQueue = room.memory.spawnQueue || [];
 
 		spawnQueue.forEach(function (q) {
-			++analysis.classes[q.memory.class];
+			++analysis.roles[q.memory.role];
 		});
 
 		// spawn any needed creeps.
-		while (analysis.classes.worker < config.minWorkers)
+		while (analysis.roles.worker < config.minWorkers)
 		{
 			console.log("queueing spawn for emergency worker");
-			spawnQueue.push(classes.worker.spawnData(null, 'emergency'));
+			spawnQueue.push(role.worker.spawnData(null, 'emergency'));
 		}
 
 		if (spawnQueue.length == 0) // nothing else going on, see if we want to add one
@@ -150,17 +147,17 @@ module.exports = {
 			var cap = analysis.gatherSlots * config.gatherScale;
 			spawners.forEach(function (sp)
 			{
-    			if (analysis.classes.worker == cap - 1)
+    			if (analysis.roles.worker == cap - 1)
     			{
     				console.log(sp.name + ": queueing spawn for new worker.");
-    				spawnQueue.push(classes.worker.spawnData(sp, 'maintain'));
-    				++analysis.classes.worker;
+    				spawnQueue.push(role.worker.spawnData(sp, 'maintain'));
+    				++analysis.roles.worker;
     			}
-    			else if (analysis.classes.worker < cap)
+    			else if (analysis.roles.worker < cap)
     			{
     				console.log(sp.name + ": queueing spawn for next worker.");
-    				spawnQueue.push(classes.worker.spawnData(sp, 'build'));
-    				++analysis.classes.worker;
+    				spawnQueue.push(role.worker.spawnData(sp, 'build'));
+    				++analysis.roles.worker;
     			}
 				else {
 					console.log(sp.name + ": population full, leaving spawner idle.");
@@ -173,10 +170,10 @@ module.exports = {
 			if (!sp.spawning && spawnQueue.length > 0)
 			{
 				var pattern = spawnQueue[0];
-				var name = classes.worker.name();
+				var name = role.worker.name();
 				if (sp.canCreateCreep(pattern.body, name))
 				{
-					console.log("spawning", pattern.memory.class, name, pattern.body);
+					console.log("spawning", pattern.memory.role, name, pattern.body);
 					spawnQueue.shift();
 					sp.createCreep(pattern.body, name, pattern.memory);
 				}

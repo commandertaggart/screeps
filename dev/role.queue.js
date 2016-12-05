@@ -48,14 +48,6 @@ module.exports = {
 	},
 	run: function role_queue_run(flag)
 	{
-		var manager = {
-			task: require('./manager.task')
-		};
-
-		var task = {
-			gather: require('./task.gather')
-		};
-
 		var q = flag.memory.queue;
 		if (q && q.waiting && q.waiting.length > 0)
 		{

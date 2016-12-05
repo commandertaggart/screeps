@@ -2,10 +2,6 @@
 module.exports = {
 	init: function task_move_init(creep, position, tolerance)
 	{
-		var manager = {
-			task: require('./manager.task')
-		};
-
 		position = new RoomPosition(
 			position.x || creep.pos.x,
 			position.y || creep.pos.y,
@@ -19,10 +15,6 @@ module.exports = {
 	},
 	run: function task_move_run(creep)
 	{
-		var manager = {
-			task: require('./manager.task')
-		};
-
 		if (creep.pos.getRangeTo(creep.memory.move.target) <= creep.memory.move.range)
 		{
 			manager.task.free(creep);

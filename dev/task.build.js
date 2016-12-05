@@ -2,10 +2,6 @@
 module.exports = {
 	init: function task_build_init(creep)
 	{
-		var manager = {
-			task: require('./manager.task')
-		};
-
 		creep.memory.task = 'build';
 
 		var targets = creep.room.find(FIND_CONSTRUCTION_SITES);
@@ -23,10 +19,6 @@ module.exports = {
 	},
 	run: function task_build_run(creep)
 	{
-		var manager = {
-			task: require('./manager.task')
-		};
-
 		var target = Game.constructionSites[creep.memory.build.site];
 		if(creep.carry[RESOURCE_ENERGY] > 0 && target)
 		{

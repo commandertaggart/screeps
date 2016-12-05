@@ -1,13 +1,13 @@
 
 module.exports = {
-	name: function class_worker_name()
+	name: function role_worker_name()
 	{
 		var num = 0;
 		while (("worker-" + num) in Game.creeps)
 		{ ++num; }
 		return "worker-" + num;
 	},
-	body: function class_worker_body(spawner, need)
+	body: function role_worker_body(spawner, need)
 	{
 		var manager = {
 			population: require('./manager.population')
@@ -49,15 +49,15 @@ module.exports = {
 
 		return body;
 	},
-	spawnData: function class_worker_spawnData(spawner, need)
+	spawnData: function role_worker_spawnData(spawner, need)
 	{
 		var body = module.exports.body(spawner, need);
 		return {
 			body: body,
-			memory: { class: "worker" }
+			memory: { role: "worker" }
 		};
 	},
-	run: function class_worker_run(creep)
+	run: function role_worker_run(creep)
 	{
 		var task = {
 			queue: require('./task.queue'),
