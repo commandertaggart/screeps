@@ -2,6 +2,8 @@
 module.exports = {
 	init: function task_queue_init(creep)
 	{
+		var manager = { flag: require("./manager.flag") };
+		
 		// pick a source to gather from.
 		var options = creep.room.find(FIND_SOURCES).map(source => {
 			var flag = manager.flag.flagForSource(source);
