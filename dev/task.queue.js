@@ -10,7 +10,7 @@ module.exports = {
 			{
 				return {
 					flag: flag,
-					weight: flag.memory.waiting.length,
+					weight: flag.memory.queue.waiting.length,
 					range: creep.pos.getRangeTo(flag)
 				};
 			}

@@ -32,7 +32,7 @@ module.exports = {
 	},
 	per: function manager_population_per(room)
 	{ console.log("population analysis for room " + room.name);
-		var cpu = Game.getUsed();
+		var cpu = Game.getUsedCpu();
 		var classes = {
 			worker: require('./class.worker')
 		}
@@ -183,7 +183,7 @@ module.exports = {
 			}
 		});
 
-		console.log("population analysis done. Cost: " + Game.getUsed() - cpu);
+		console.log("population analysis done. Cost: " + Game.getUsedCpu() - cpu);
 	},
 	bodyCost: function manager_population_bodyCost(body)
 	{
