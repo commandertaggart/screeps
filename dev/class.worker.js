@@ -1,31 +1,71 @@
 
 var task = {
-	queue: require('task.queue'),
-	gather: require('task.gather'),
-	upgrade: require('task.upgrade'),
-	store: require('task.store'),
-	build: require('task.build'),
-	repair: require('task.repair')
+	queue: require('./task.queue'),
+	gather: require('./task.gather'),
+	upgrade: require('./task.upgrade'),
+	store: require('./task.store'),
+	build: require('./task.build'),
+	repair: require('./task.repair')
 };
 
 var manager = {
-	flag: require('manager.flag')
+	flag: require('./manager.flag'),
+	population: require('./manager.population')
 };
 
 module.exports = {
-	body: function class_worker_body(spawner)
+	name: function class_worker_name()
 	{
-		var room = spawner.room;
-		var controller = room.controller;
-		var clevel = controller?controller.level:1;
-		// determine body based on room status.
-
-		return [WORK,MOVE,CARRY];
+		var num = 0;
+		while (("worker-" + num) in Game.creeps)
+		{ ++num; }
+		return "worker-" + num;
 	},
-	spawn: function class_worker_spawn(spawner)
+	body: function class_worker_body(spawner, need)
 	{
-		var body = module.exports.body(spawner);
-		spawner.createCreep(body, { class: "worker"});
+		if (need == 'emergency')
+		{ return [WORK, MOVE, CARRY]; }
+
+		var room = spawner.room;
+		//var controller = room.controller;
+		//var clevel = controller?controller.level:1;
+		//var analysis = room.memory.analysis || {};
+		var ecap = room.energyCapacityAvailable;
+		var ecur = room.energyAvailable;
+
+		var prio = [CARRY, MOVE, WORK];
+		var body = [WORK, MOVE, CARRY];
+		var cost = manager.population.bodyCost(body);
+		var next = prio[body.length % 3];
+
+		if (need == 'build')
+		{
+			while (cost + BODYPART_COST[next] < ecur)
+			{
+				body.append(next);
+				next = prio[body.length % 3];
+			}
+		}
+		else if (need == 'maintain')
+		{
+			while (cost + BODYPART_COST[next] < ecap)
+			{
+				body.append(next);
+				next = prio[body.length % 3];
+			}
+		}
+
+		body.sort();
+
+		return body;
+	},
+	spawnData: function class_worker_spawnData(spawner, need)
+	{
+		var body = module.exports.body(spawner, need);
+		return {
+			body: body,
+			memory: { class: "worker" }
+		};
 	},
 	run: function class_worker_run(creep)
 	{

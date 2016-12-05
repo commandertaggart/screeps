@@ -1,11 +1,9 @@
+
+var manager = {
+	task: require('./manager.task')
+};
+
 module.exports = {
-	run: function task_move_run(creep)
-	{
-		if (creep.pos.getRangeTo(creep.memory.move.target) <= creep.memory.move.range)
-		{
-			// task done
-		}
-	},
 	init: function task_move_init(creep, position, tolerance)
 	{
 		position = new RoomPosition(
@@ -17,7 +15,13 @@ module.exports = {
 			target: position,
 			tolerance: tolerance || 0
 		}
-		creep.memory.tasks = creep.memory.tasks || [];
-		creep.memory.tasks.unshift('move');
+		creep.memory.task = 'move';
+	},
+	run: function task_move_run(creep)
+	{
+		if (creep.pos.getRangeTo(creep.memory.move.target) <= creep.memory.move.range)
+		{
+			manager.task.free(creep);
+		}
 	}
 }

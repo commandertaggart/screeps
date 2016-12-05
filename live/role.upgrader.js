@@ -1,7 +1,7 @@
 var travel = require('utils.travel');
 
 var roleUpgrader = {
-    max: 1,
+    max: 2,
     body: [WORK,WORK,MOVE,MOVE,CARRY,CARRY],
     tempAs: null,
 

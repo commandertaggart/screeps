@@ -7,11 +7,11 @@ time, then only allow that many creeps to approach of those that are rallied
 at this flag. */
 
 var manager = {
-	task: require('manager.task')
+	task: require('./manager.task')
 };
 
 var task = {
-	gather: require('task.gather')
+	gather: require('./task.gather')
 };
 
 module.exports = {

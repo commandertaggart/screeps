@@ -1,13 +1,13 @@
 
 var classes = {
-	worker: require('class.worker')
+	worker: require('./class.worker')
 }
 
 // Worker jobs: gather, store, upgrade, build, repair
 module.exports = {
 	free: function manager_task_free(creep)
 	{
-		// unassign current job and task
+		// unassign current task
 		if (creep.memory.task)
 		{ delete creep.memory[creep.memory.task]; }
 		creep.memory.task = null;

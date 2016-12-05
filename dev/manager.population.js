@@ -1,11 +1,16 @@
 
 var classes = {
-	worker: require('class.worker')
+	worker: require('./class.worker')
+}
+
+var config = {
+	minWorkers: 2,
+	gatherScale: 3
 }
 
 module.exports = {
 	frequency: 20, // one room per tick, no room more often than once per this many ticks.
-	run: manager_population_run()
+	run: function manager_population_run()
 	{
 		var oneRoom = false;
 		for (var r in Game.rooms)
@@ -23,12 +28,13 @@ module.exports = {
 					else {
 						module.exports.per(room);
 						p.cooldown = module.exports.frequency;
+						oneRoom = true;
 					}
 				}
 			}
 		}
 	},
-	per: manager_population_per(room)
+	per: function manager_population_per(room)
 	{
 		// analyze population and determine needs
 		var analysis = {
@@ -38,11 +44,13 @@ module.exports = {
 				idle: 0
 			},
 			classes: {
+				worker: 0
 			},
 			energyPct: -1,
 			sources: room.find(FIND_SOURCES).length,
 			constructionSites: 0,
 			construction: 0,
+			gatherSlots: 0,
 			dyingCreeps: [],
 			dyingStructures: [],
 			enemyStructures: []
@@ -63,7 +71,8 @@ module.exports = {
 
 				if (creep.memory.class)
 				{
-					++analysis.classes[creep.memory.class];
+					var c = creep.memory.class;
+					++analysis.classes[c];
 				}
 				else {
 					// ignore this one, it's a one-off
@@ -91,8 +100,28 @@ module.exports = {
 		room.find(FIND_STRUCTURES).forEach(structure => {
 			if (structure.my)
 			{
-				if ((structure.hits * 2) < structure.hitsMax)
-				{ analysis.dyingStructures.push(structure.id); }
+				switch (structure.structureType)
+				{
+					case STRUCTURE_SPAWN:
+						var flag = Game.flags['queue-' + structure.pos.x + '-' + structure.pos.y];
+						if (flag)
+						{
+							analysis.gatherSlots += flag.memory.queue.slots;
+						}
+						if (structure.hits < structure.hitsMax)
+						{ analysis.dyingStructures.push(structure.id); }
+						break;
+					case STRUCTURE_WALL:
+					case STRUCTURE_EXTENSION:
+					case STRUCTURE_CONTROLLER:
+						if (structure.hits < structure.hitsMax)
+						{ analysis.dyingStructures.push(structure.id); }
+						break;
+					default:
+						if ((structure.hits * 2) < structure.hitsMax)
+						{ analysis.dyingStructures.push(structure.id); }
+						break;
+				}
 			}
 			else {
 				analysis.enemyStructures.push(structure.id);
@@ -102,12 +131,52 @@ module.exports = {
 		room.memory.analysis = analysis;
 
 		var spawners = room.find(FIND_MY_SPAWNS);
+		var spawnQueue = room.memory.spawnQueue = room.memory.spawnQueue || [];
+
+		spawnQueue.forEach(function (q) {
+			++analysis.classes[q.memory.class];
+		});
+
 		// spawn any needed creeps.
-		if (analysis.mine == 0 || analysis.classes.worker == undefined)
+		while (analysis.classes.worker < config.minWorkers)
 		{
-			// emergency spawn workers
-			spawners.forEach(sp => classes.worker.spawn(sp));
-			return;
+			console.log("queueing spawn for emergency worker");
+			spawnQueue.push(classes.worker.spawnData(sp, 'emergency'));
 		}
+
+		if (spawnQueue.length == 0) // nothing else going on, see if we want to add one
+		{
+			var cap = analysis.gatherSlots * config.gatherScale;
+			if (analysis.classes.worker == cap - 1)
+			{
+				console.log("queueing spawn for new worker");
+				spawnQueue.push(classes.worker.spawnData(sp, 'maintain'));
+			}
+			else if (analysis.classes.worker < cap)
+			{
+				console.log("queueing spawn for next worker");
+				spawnQueue.push(classes.worker.spawnData(sp, 'build'));
+			}
+		}
+
+		spawners.forEach(function (sp) {
+			if (!sp.spawning && spawnQueue.length > 0)
+			{
+				var pattern = spawnQueue[0];
+				var name = classes.worker.name();
+				if (sp.canCreateCreep(pattern.body, name))
+				{
+					console.log("spawning", pattern.memory.class, name, pattern.body);
+					spawnQueue.shift();
+					sp.createCreep(pattern.body, name, pattern.memory);
+				}
+			}
+		});
+	},
+	bodyCost: function manager_population_bodyCost(body)
+	{
+		var cost = 0;
+		body.forEach(function (bit) { cost += BODYPART_COST[bit]; });
+		return cost;
 	}
 }

@@ -1,7 +1,7 @@
 var travel = require('utils.travel');
 
 var roleBuilder = {
-    max: 2,
+    max: 3,
     body: [WORK,WORK,MOVE,MOVE,CARRY,CARRY],
     tempAs: 'harvester',
 

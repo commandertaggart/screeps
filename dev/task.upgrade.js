@@ -1,6 +1,6 @@
 
 var manager = {
-	task: require('manager.task')
+	task: require('./manager.task')
 };
 
 module.exports = {
@@ -16,15 +16,14 @@ module.exports = {
 	{
 		if (creep.room.controller)
 		{
-			if(creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
+			var result = creep.upgradeController(creep.room.controller);
+			if (result == ERR_NOT_IN_RANGE) {
 				creep.moveTo(creep.room.controller);
 			}
-			else {
-				manager.task.free(creep);
-			}
+			else if (result != OK) //ERR_NOT_ENOUGH_ENERGY)
+			{ manager.task.free(creep); }
 		}
-		else {
-			manager.task.free(creep);
-		}
+		else
+		{ manager.task.free(creep); }
 	}
 }

@@ -1,6 +1,6 @@
 
 var manager = {
-	job: require('manager.job')
+	task: require('./manager.task')
 };
 
 module.exports = {
@@ -25,7 +25,7 @@ module.exports = {
 		}
 		else
 		{
-			manager.job.free(creep);
+			manager.task.free(creep);
 		}
 	},
 	run: function task_gather_run(creep)
@@ -41,7 +41,7 @@ module.exports = {
 
 		if (creep.carry.energy == creep.carryCapacity)
 		{
-			manager.job.free(creep);
+			manager.task.free(creep);
 			return;
 		}
 	}

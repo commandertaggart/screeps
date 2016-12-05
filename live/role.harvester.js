@@ -1,6 +1,6 @@
 roleHarvester = {
-    max: 3,
-    body: [WORK,MOVE,MOVE,CARRY,CARRY],
+    max: 4,
+    body: [WORK,MOVE,CARRY],
     tempAs: 'upgrader',
 
     hasWork: function harvester_hasWork(creep)
@@ -47,7 +47,7 @@ roleHarvester = {
         else {
             var sources = creep.room.find(FIND_SOURCES);
 //	        var source = sources[1];
-            var source = sources[which % sources.length];
+            var source = sources[(which-1) % sources.length];
 //	        var source = travel.closestSource(creep)
             if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(source);

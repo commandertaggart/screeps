@@ -1,6 +1,6 @@
 
 var manager = {
-	task: require('manager.task')
+	task: require('./manager.task')
 };
 
 module.exports = {
@@ -29,18 +29,15 @@ module.exports = {
 	{
 		var target = Game.getObjectById(creep.memory.store.id);
 
-		if (target)
+		if (target && (target.energy < target.energyCapacity))
 		{
-			if(creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-			{
-				creep.moveTo(target);
-			}
-			else {
-				manager.task.free(creep);
-			}
+			var result = creep.transfer(target, RESOURCE_ENERGY);
+			if (result == ERR_NOT_IN_RANGE)
+			{ creep.moveTo(target); }
+			else if (result != OK) //ERR_NOT_ENOUGH_ENERGY || result == ERR_FULL)
+			{ manager.task.free(creep); }
 		}
-		else {
-			manager.task.free(creep);
-		}
+		else
+		{ manager.task.free(creep); }
 	}
 }

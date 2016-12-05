@@ -1,6 +1,6 @@
 
 var manager = {
-	task: require('manager.task')
+	task: require('./manager.task')
 };
 
 module.exports = {
@@ -15,17 +15,19 @@ module.exports = {
 				return {
 					flag: flag,
 					weight: flag.memory.waiting.length,
+					range: creep.pos.getRangeTo(flag)
 				};
 			}
 			else
 			{ // handle sources without flag?  Not right now.
 				return {
-					weight: 99
+					weight: 99,
+					range: 99
 				}
 			}
 		});
 		options.sort((a,b) => {
-			return a.weight - b.weight;
+			return (a.weight - b.weight) || (a.range - b.range);
 		});
 
 		if (options[0].flag)
