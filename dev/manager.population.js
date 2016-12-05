@@ -1,8 +1,4 @@
 
-var classes = {
-	worker: require('./class.worker')
-}
-
 var config = {
 	minWorkers: 2,
 	gatherScale: 3
@@ -36,6 +32,10 @@ module.exports = {
 	},
 	per: function manager_population_per(room)
 	{
+		var classes = {
+			worker: require('./class.worker')
+		}
+
 		// analyze population and determine needs
 		var analysis = {
 			hostiles: [],

@@ -1,8 +1,4 @@
 
-var manager = {
-	task: require('./manager.task')
-};
-
 module.exports = {
 	init: function task_queue_init(creep)
 	{
@@ -46,6 +42,10 @@ module.exports = {
 	},
 	run: function task_queue_run(creep)
 	{
+		var manager = {
+			task: require('./manager.task')
+		};
+
 		var flag = Game.getObjectById(creep.memory.queue.id);
 		if (flag)
 		{

@@ -1,11 +1,11 @@
 
-var manager = {
-	task: require('./manager.task')
-};
-
 module.exports = {
 	init: function task_gather_init(creep, x, y)
 	{
+		var manager = {
+			task: require('./manager.task')
+		};
+
 		if ('y' in x)
 		{ y = x.y; x = x.x }
 
@@ -30,6 +30,10 @@ module.exports = {
 	},
 	run: function task_gather_run(creep)
 	{
+		var manager = {
+			task: require('./manager.task')
+		};
+
 		var g = creep.memory.gather;
 		if (g)
 		{

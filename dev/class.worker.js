@@ -1,18 +1,4 @@
 
-var task = {
-	queue: require('./task.queue'),
-	gather: require('./task.gather'),
-	upgrade: require('./task.upgrade'),
-	store: require('./task.store'),
-	build: require('./task.build'),
-	repair: require('./task.repair')
-};
-
-var manager = {
-	flag: require('./manager.flag'),
-	population: require('./manager.population')
-};
-
 module.exports = {
 	name: function class_worker_name()
 	{
@@ -23,6 +9,10 @@ module.exports = {
 	},
 	body: function class_worker_body(spawner, need)
 	{
+		var manager = {
+			population: require('./manager.population')
+		};
+
 		if (need == 'emergency')
 		{ return [WORK, MOVE, CARRY]; }
 
@@ -69,6 +59,15 @@ module.exports = {
 	},
 	run: function class_worker_run(creep)
 	{
+		var task = {
+			queue: require('./task.queue'),
+			gather: require('./task.gather'),
+			upgrade: require('./task.upgrade'),
+			store: require('./task.store'),
+			build: require('./task.build'),
+			repair: require('./task.repair')
+		};
+
 		if (creep.memory.task)
 		{
 			if (creep.memory.task in task)

@@ -1,8 +1,4 @@
 
-var manager = {
-	task: require('./manager.task')
-};
-
 module.exports = {
 	init: function task_store_init(creep)
 	{
@@ -27,6 +23,10 @@ module.exports = {
 	},
 	run: function task_store_run(creep)
 	{
+		var manager = {
+			task: require('./manager.task')
+		};
+
 		var target = Game.getObjectById(creep.memory.store.id);
 
 		if (target && (target.energy < target.energyCapacity))

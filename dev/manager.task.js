@@ -1,8 +1,4 @@
 
-var classes = {
-	worker: require('./class.worker')
-}
-
 // Worker jobs: gather, store, upgrade, build, repair
 module.exports = {
 	free: function manager_task_free(creep)
@@ -15,6 +11,10 @@ module.exports = {
 
 	run: function manager_task_run()
 	{
+		var classes = {
+			worker: require('./class.worker')
+		}
+
 		for (var c in Game.creeps)
 		{
 			var creep = Game.creeps[c];

@@ -1,8 +1,4 @@
 
-var manager = {
-	task: require('./manager.task')
-};
-
 module.exports = {
 	init: function task_upgrade_init(creep)
 	{
@@ -14,6 +10,10 @@ module.exports = {
 	},
 	run: function task_upgrade_run(creep)
 	{
+		var manager = {
+			task: require('./manager.task')
+		};
+
 		if (creep.room.controller)
 		{
 			var result = creep.upgradeController(creep.room.controller);

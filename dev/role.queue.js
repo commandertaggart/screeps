@@ -6,14 +6,6 @@ the structure to determine how many creeps are able to access it at one
 time, then only allow that many creeps to approach of those that are rallied
 at this flag. */
 
-var manager = {
-	task: require('./manager.task')
-};
-
-var task = {
-	gather: require('./task.gather')
-};
-
 module.exports = {
 	init: function role_queue_init(flag)
 	{
@@ -56,6 +48,14 @@ module.exports = {
 	},
 	run: function role_queue_run(flag)
 	{
+		var manager = {
+			task: require('./manager.task')
+		};
+
+		var task = {
+			gather: require('./task.gather')
+		};
+
 		var q = flag.memory.queue;
 		if (q && q.waiting && q.waiting.length > 0)
 		{

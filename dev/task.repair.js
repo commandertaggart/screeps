@@ -1,11 +1,11 @@
 
-var manager = {
-	task: require('./manager.task')
-};
-
 module.exports = {
 	init: function task_repair_init(creep)
 	{
+		var manager = {
+			task: require('./manager.task')
+		};
+
 		creep.memory.task = 'repair';
 
 		var targets = (creep.room.memory.analysis || {dyingStructures:[]}).dyingStructures
@@ -24,6 +24,10 @@ module.exports = {
 	},
 	run: function task_repair_run(creep)
 	{
+		var manager = {
+			task: require('./manager.task')
+		};
+
 		var target = Game.getObjectById(creep.memory.repair.structure);
 		if(creep.carry[RESOURCE_ENERGY] > 0 && target && (target.hits < target.hitsMax))
 		{
