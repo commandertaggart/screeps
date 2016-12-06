@@ -180,7 +180,7 @@ module.exports = {
 			}
 		});
 
-		console.log("population analysis done. Cost: " + Game.cpu.getUsed() - cpu);
+		console.log("population analysis done. Cost: " + (Game.cpu.getUsed() - cpu));
 	},
 	bodyCost: function manager_population_bodyCost(body)
 	{
