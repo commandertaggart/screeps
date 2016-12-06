@@ -30,11 +30,11 @@ module.exports = {
 		{
 			creep.memory.task = 'queue';
 			creep.memory.queue = {
-				id: options[0].flag.id,
+				flag: options[0].flag.name,
 				target: options[0].flag.pos
 			};
 
-			console.log(creep.name, "queueing at", creep.memory.queue.id);
+			console.log(creep.name, "queueing at", creep.memory.queue.name);
 
 			module.exports.run(creep);
 		}
@@ -44,7 +44,7 @@ module.exports = {
 	},
 	run: function task_queue_run(creep)
 	{ console.log(creep.name, "queueing");
-		var flag = Game.getObjectById(creep.memory.queue.id);
+		var flag = Game.flags[creep.memory.queue.flag];
 		if (flag)
 		{
 			var q = flag.memory.queue;
