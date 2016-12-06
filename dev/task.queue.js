@@ -32,7 +32,9 @@ module.exports = {
 			creep.memory.queue = {
 				id: options[0].flag.id,
 				target: options[0].flag.pos
-			}
+			};
+
+			console.log(creep.name, "queueing at", creep.memory.queue.id);
 
 			module.exports.run(creep);
 		}
