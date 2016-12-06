@@ -32,7 +32,7 @@ module.exports = {
 	},
 	per: function manager_population_per(room)
 	{ console.log("population analysis for room " + room.name);
-		var cpu = Game.getUsedCpu();
+		var cpu = Game.cpu.getUsed();
 
 		// analyze population and determine needs
 		var analysis = {
@@ -180,7 +180,7 @@ module.exports = {
 			}
 		});
 
-		console.log("population analysis done. Cost: " + Game.getUsedCpu() - cpu);
+		console.log("population analysis done. Cost: " + Game.cpu.getUsed() - cpu);
 	},
 	bodyCost: function manager_population_bodyCost(body)
 	{
