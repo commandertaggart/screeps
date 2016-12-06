@@ -3,6 +3,7 @@
 module.exports = {
 	free: function manager_task_free(creep)
 	{
+		console.log(creep.name, "now free from task", creep.memory.task);
 		// unassign current task
 		if (creep.memory.task)
 		{ delete creep.memory[creep.memory.task]; }

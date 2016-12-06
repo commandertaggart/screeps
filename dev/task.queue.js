@@ -41,7 +41,7 @@ module.exports = {
 		}
 	},
 	run: function task_queue_run(creep)
-	{
+	{ console.log(creep.name, "queueing");
 		var flag = Game.getObjectById(creep.memory.queue.id);
 		if (flag)
 		{
